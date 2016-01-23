@@ -21,18 +21,18 @@ Install the heroku commandline toolbelt
 Install Postgresql on your operating system
 For Macs, use you can use homebrew if you have it:
 `brew install postgresql`
-Run Postgres, on OSX with El Capitan:
-`launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist`
+Now run postgres. My personal favorite way of doing this is on Mac is with the `lunchy` gem.
+`gem install lunchy`
+and then
+`lunchy start postgres` or `lunchy stop postgres`
 
 After Postgres is installed and running:
 Create user as a superuser:
-`createuser -s viewthespace`
+`createuser -s -r owler`
 Create the databases for development and testing:
-`createdb -O viewthespace -E utf8 owler_development`
-`createdb -O viewthespace -E utf8 owler_test`
-*On Linux, if you run into an authentication problem with Postgres, you may have to do this: http://stackoverflow.com/questions/5817301/rake-dbcreate-fails-authentication-problem-with-postgresql-8-4
-*(Mac) If postgres is running, but you see an error like could not connect to server: No such file or directory, try creating a symlink:
-cd var && ln -s /tmp pgsql_socket
+`rake db:create:all`
+This creates three databases, one for development, testing, and production. Details in `database.yml`
+
 
 * Database initialization
 
