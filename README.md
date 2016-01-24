@@ -14,10 +14,7 @@ Install ruby
 `rvm install ruby-2.1.5`
 Run `bundle install`  
 
-##Heroku setup
-Install the heroku commandline toolbelt
-
-* Database creation
+### Database creation
 Install Postgresql on your operating system
 For Macs, use you can use homebrew if you have it:
 `brew install postgresql`
@@ -33,6 +30,8 @@ Create the databases for development and testing:
 `rake db:create:all`
 This creates three databases, one for development, testing, and production. Details in `database.yml`
 
+### Heroku setup
+Install the heroku commandline toolbelt
 
 * Database initialization
 
