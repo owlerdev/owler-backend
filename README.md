@@ -29,6 +29,8 @@ Create user as a superuser:
 Create the databases for development and testing:
 `rake db:create:all`
 This creates three databases, one for development, testing, and production. Details in `database.yml`
+Then migrate your databases. You'll be doing this often, so it might be a good idea to make an alias for these two commands so that you always run them at the same time.
+`rake db:migrate` and `rake db:migrate RAILS_ENV=test`
 
 ### Heroku setup
 Install the heroku commandline toolbelt
