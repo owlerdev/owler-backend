@@ -5,11 +5,13 @@ class CreateEvents < ActiveRecord::Migration
       t.string :address
       t.text :description
 
-      # times
-      t.datetime :start
-      t.datetime :end
+      t.integer :user_id
 
-      t.boolean :posted
+      # times
+      t.datetime :start_t
+      t.datetime :end_t
+
+      t.boolean :posted, default: false
       t.string :update_code
 
       t.timestamps null: false
