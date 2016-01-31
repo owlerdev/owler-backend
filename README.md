@@ -38,7 +38,7 @@ Install the heroku commandline toolbelt
 
 * Deployment instructions
 
-* ...
+* ..
 
 
 Please feel free to use a different markup language if you do not plan to run
