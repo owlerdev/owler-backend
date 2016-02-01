@@ -3,7 +3,7 @@ class EventController < ApplicationController
     render json: Event.all
   end
 
-  def new
+  def create
     event = Event.new filtered_params
     event.save!
     current_user.events += [event]
@@ -12,11 +12,17 @@ class EventController < ApplicationController
   end
 
   def show
-    render json: Event.find_by_id(params[:id])
+    render json: Event.find(params[:id])
   end
 
   def update
+    event = Event.find(params[:id])
 
+    if event.update_attributes(filtered_params)
+      render json: event
+    else
+      head :error
+    end
   end
 
   def destroy

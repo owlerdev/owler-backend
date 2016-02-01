@@ -1,13 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe EventController, type: :controller do
-  include Devise::TestHelpers
-
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = create(:user)
     sign_in @user
 
-    @event = FactoryGirl.build(:event)
+    @event = create(:event)
   end
 
   describe "GET event#index" do
@@ -19,7 +17,8 @@ RSpec.describe EventController, type: :controller do
 
   describe "POST event#new" do
     it "creates a new object" do
-      post :new, event: @event.attributes
+      Event.destroy_all
+      post :create, event: @event.attributes
       expect(response).to have_http_status(:success)
       expect(JSON.parse(response.body)['name']).to eq(@event.name)
     end
@@ -27,7 +26,7 @@ RSpec.describe EventController, type: :controller do
 
   describe "GET event#show" do
     before do
-      @event = FactoryGirl.create(:event)
+      @event = create(:event)
     end
 
     it "returns an event" do
@@ -37,11 +36,23 @@ RSpec.describe EventController, type: :controller do
     end
   end
 
+  describe "update event" do
+    it "modifies an event with PATCH" do
+      patch :update, id: @event.id, event: {address: "new address"}
+      expect(JSON.parse(response.body)['address']).to eq("new address")
+    end
+
+    it "modifies an event with PUT" do
+      @event.address = "new address"
+      put :update, id: @event.id, event: @event.attributes
+      expect(JSON.parse(response.body)['address']).to eq("new address")
+    end
+  end
+
   describe "DELETE event" do
     before(:each) do
-      @another_user = FactoryGirl.create(:another_user)
-      @event = FactoryGirl.create(:event)
-      @another_event = FactoryGirl.create(:another_event)
+      @another_user = create(:another_user)
+      @another_event = create(:another_event)
 
       @user.events += [@event]
       @another_user.events += [@another_event]
