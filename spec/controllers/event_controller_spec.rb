@@ -55,8 +55,14 @@ RSpec.describe EventController, type: :controller do
 
     it "does not destroy another user's event" do
       delete :destroy, id: @another_event.id
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:error)
       expect(Event.exists?(@another_event.id)).to be true
+    end
+
+    it "can't destroy something that doesn't exist" do
+      Event.destroy_all
+      delete :destroy, id: 1
+      expect(response).to have_http_status(:error)
     end
   end
 

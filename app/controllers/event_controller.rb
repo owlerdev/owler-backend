@@ -20,14 +20,16 @@ class EventController < ApplicationController
   end
 
   def destroy
-    event = Event.find_by_id(params[:id])
+    # can only delete events owned by current user
+    event = Event.find_by(id: params[:id], user_id: current_user.id)
 
-    # can only delete events owned by user
-    if event.user.id == current_user.id
+    if event.nil?
+      # todo: different error code?
+      head :error
+    else
       event.destroy
+      render json: event
     end
-
-    render json: event
   end
 
   private
