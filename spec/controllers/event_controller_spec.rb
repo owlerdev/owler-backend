@@ -4,7 +4,9 @@ RSpec.describe EventController, type: :controller do
   include Devise::TestHelpers
 
   before(:each) do
-    sign_in FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user)
+    sign_in @user
+
     @event = FactoryGirl.build(:event)
   end
 
@@ -16,8 +18,10 @@ RSpec.describe EventController, type: :controller do
   end
 
   describe "POST event#new" do
-    it "returns http success" do
+    it "creates a new object" do
       post :new, event: @event.attributes
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['name']).to eq(@event.name)
     end
   end
 
@@ -26,9 +30,33 @@ RSpec.describe EventController, type: :controller do
       @event = FactoryGirl.create(:event)
     end
 
-    it "returns the event" do
+    it "returns an event" do
       get :show, id: @event.id
-      response.body.should == @event.to_json
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['id']).to equal(@event.id)
+    end
+  end
+
+  describe "DELETE event" do
+    before(:each) do
+      @another_user = FactoryGirl.create(:another_user)
+      @event = FactoryGirl.create(:event)
+      @another_event = FactoryGirl.create(:another_event)
+
+      @user.events += [@event]
+      @another_user.events += [@another_event]
+    end
+
+    it "destroys event owned by user" do
+      delete :destroy, id: @event.id
+      expect(response).to have_http_status(:success)
+      expect(Event.exists?(@event.id)).to be false
+    end
+
+    it "does not destroy another user's event" do
+      delete :destroy, id: @another_event.id
+      expect(response).to have_http_status(:success)
+      expect(Event.exists?(@another_event.id)).to be true
     end
   end
 

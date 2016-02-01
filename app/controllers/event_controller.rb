@@ -20,7 +20,14 @@ class EventController < ApplicationController
   end
 
   def destroy
+    event = Event.find_by_id(params[:id])
 
+    # can only delete events owned by user
+    if event.user.id == current_user.id
+      event.destroy
+    end
+
+    render json: event
   end
 
   private
