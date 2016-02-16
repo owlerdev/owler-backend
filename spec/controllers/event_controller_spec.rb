@@ -15,7 +15,7 @@ RSpec.describe EventController, type: :controller do
     end
   end
 
-  describe "POST event#new" do
+  describe "POST event#create" do
     it "creates a new object" do
       Event.destroy_all
       post :create, event: @event.attributes

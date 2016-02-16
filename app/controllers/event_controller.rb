@@ -1,13 +1,29 @@
 class EventController < ApplicationController
+  include Geokit
+
   def index
     render json: Event.all
   end
 
   def create
     event = Event.new filtered_params
+
+    # find first match for address
+    loc = Geokit::Geocoders::MapboxGeocoder.geocode(event.address)
+    if !loc.success
+      head :error
+      return
+    end
+
+    # set found address and latlong
+    event.address = loc.full_address
+    event.lat = loc.lat
+    event.lng = loc.lng
+    
     event.save!
     current_user.events += [event]
-    current_user.save!
+    current_user.save! 
+
     render json: event
   end
 
@@ -43,3 +59,5 @@ class EventController < ApplicationController
       params.require(:event).permit(:id, :name, :address, :description)
     end
 end
+
+
