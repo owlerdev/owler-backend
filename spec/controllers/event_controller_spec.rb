@@ -20,7 +20,25 @@ RSpec.describe EventController, type: :controller do
       Event.destroy_all
       post :create, event: @event.attributes
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)['name']).to eq(@event.name)
+
+      response_event = JSON.parse(response.body)
+      expect(response_event['name']).to eq(@event.name)
+      expect(response_event['lat']).to be_instance_of(Float)
+      expect(response_event['lng']).to be_instance_of(Float)
+    end
+
+    it "fails to create a new event with bad address" do
+      Event.destroy_all
+      @event.address = "QQQQQQQQQQQQQQ"
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
+    end
+
+    it "fails to create a new event with no address" do
+      Event.destroy_all
+      @event.address = ""
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
     end
   end
 

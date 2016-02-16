@@ -22,7 +22,7 @@ class EventController < ApplicationController
     
     event.save!
     current_user.events += [event]
-    current_user.save! 
+    current_user.save!
 
     render json: event
   end
