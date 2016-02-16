@@ -6,6 +6,7 @@ class Event < ActiveRecord::Base
                    :lng_column_name => :lng
   
   belongs_to :user
+  before_validation :geocode_address
 
   # Event must have user, name, address, start time, and location
   validates :user, presence: true
@@ -14,4 +15,14 @@ class Event < ActiveRecord::Base
   validates :address, presence: true
   validates :lat, presence: true
   validates :lng, presence: true
+
+  private
+    def geocode_address
+      loc = Geokit::Geocoders::MapboxGeocoder.geocode (address)
+      if loc.success
+        self.lat, self.lng = loc.lat, loc.lng
+      else
+        errors.add(:address, "Could not find address")
+      end
+    end
 end

@@ -7,21 +7,7 @@ class EventController < ApplicationController
 
   def create
     event = Event.new filtered_params
-
-    # find first match for address
-    loc = Geokit::Geocoders::MapboxGeocoder.geocode(event.address)
-    if !loc.success
-      head :error
-      return
-    end
-
-    # set found address and latlong
     event.user = current_user
-    event.address = loc.full_address
-    event.lat = loc.lat
-    event.lng = loc.lng
-
-    binding.pry
 
     if event.valid?
       event.save!
@@ -31,6 +17,8 @@ class EventController < ApplicationController
       head :error
       return
     end
+
+    binding.pry
 
     render json: event
   end

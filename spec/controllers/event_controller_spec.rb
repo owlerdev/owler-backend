@@ -57,14 +57,14 @@ RSpec.describe EventController, type: :controller do
 
   describe "update event" do
     it "modifies an event with PATCH" do
-      patch :update, id: @event.id, event: {address: "new address"}
-      expect(JSON.parse(response.body)['address']).to eq("new address")
+      patch :update, id: @event.id, event: {address: "700 Ukrop Way"}
+      expect(JSON.parse(response.body)['address']).to eq("700 Ukrop Way")
     end
 
     it "modifies an event with PUT" do
-      @event.address = "new address"
+      @event.address = "700 Ukrop Way"
       put :update, id: @event.id, event: @event.attributes
-      expect(JSON.parse(response.body)['address']).to eq("new address")
+      expect(JSON.parse(response.body)['address']).to eq("700 Ukrop Way")
     end
   end
 
