@@ -16,13 +16,21 @@ class EventController < ApplicationController
     end
 
     # set found address and latlong
+    event.user = current_user
     event.address = loc.full_address
     event.lat = loc.lat
     event.lng = loc.lng
-    
-    event.save!
-    current_user.events += [event]
-    current_user.save!
+
+    binding.pry
+
+    if event.valid?
+      event.save!
+      current_user.events += [event]
+      current_user.save!
+    else
+      head :error
+      return
+    end
 
     render json: event
   end
@@ -56,7 +64,7 @@ class EventController < ApplicationController
 
   private
     def filtered_params
-      params.require(:event).permit(:id, :name, :address, :description)
+      params.require(:event).permit(:id, :name, :address, :description, :start_t, :end_t)
     end
 end
 

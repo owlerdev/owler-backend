@@ -2,10 +2,8 @@ require 'rails_helper'
 
 RSpec.describe EventController, type: :controller do
   before(:each) do
-    @user = create(:user)
-    sign_in @user
-
     @event = create(:event)
+    sign_in @event.user
   end
 
   describe "GET event#index" do
@@ -16,8 +14,11 @@ RSpec.describe EventController, type: :controller do
   end
 
   describe "POST event#create" do
-    it "creates a new object" do
+    before(:each) do
       Event.destroy_all
+    end
+
+    it "creates a new object" do
       post :create, event: @event.attributes
       expect(response).to have_http_status(:success)
 
@@ -28,25 +29,25 @@ RSpec.describe EventController, type: :controller do
     end
 
     it "fails to create a new event with bad address" do
-      Event.destroy_all
       @event.address = "QQQQQQQQQQQQQQ"
       post :create, event: @event.attributes
       expect(response).to have_http_status(:error)
     end
 
     it "fails to create a new event with no address" do
-      Event.destroy_all
       @event.address = ""
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
+    end
+
+    it "fails to create a new event with no name" do
+      @event.name = ""
       post :create, event: @event.attributes
       expect(response).to have_http_status(:error)
     end
   end
 
   describe "GET event#show" do
-    before do
-      @event = create(:event)
-    end
-
     it "returns an event" do
       get :show, id: @event.id
       expect(response).to have_http_status(:success)
@@ -69,11 +70,9 @@ RSpec.describe EventController, type: :controller do
 
   describe "DELETE event" do
     before(:each) do
-      @another_user = create(:another_user)
       @another_event = create(:another_event)
-
-      @user.events += [@event]
-      @another_user.events += [@another_event]
+      @event.user.events += [@event]
+      @another_event.user.events += [@another_event]
     end
 
     it "destroys event owned by user" do

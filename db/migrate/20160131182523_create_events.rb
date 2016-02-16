@@ -17,7 +17,6 @@ class CreateEvents < ActiveRecord::Migration
       t.datetime :end_t
 
       t.boolean :posted, default: false
-      t.string :update_code
 
       t.timestamps null: false
     end
