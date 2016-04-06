@@ -28,9 +28,10 @@ RSpec.describe VoteController, type: :controller do
     end
 
     it "deletes a user's upvote" do
-      delete :destroy, id: @event.id
+      delete :destroy,  id: @vote.id
       expect(response).to have_http_status(:success)
-      expect(@vote).to eq(nil)
+      binding.pry
+      expect(Vote.exists?(@vote.id)).to be false
     end
   end
 end

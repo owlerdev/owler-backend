@@ -14,11 +14,11 @@ class Event < ActiveRecord::Base
   validates :user, :name, :start_t, :address, :lat, :lng, presence: true
 
   def hype
-    Vote.where(event_id: self.id, type: 0).count
+    Vote.where(event_id: self.id, kind: 0).count
   end
 
   def upvotes
-    Vote.where(event_id: self.id, type: 1).count
+    Vote.where(event_id: self.id, kind: 1).count
   end
 
   private

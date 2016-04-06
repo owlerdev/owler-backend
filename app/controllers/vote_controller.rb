@@ -16,13 +16,13 @@ class VoteController < ApplicationController
 
   def destroy
     # can only delete user's votes
-    event = Vote.find_by(id: params[:id], user_id: current_user.id)
+    vote = Vote.find_by(id: params[:id], user_id: current_user.id)
 
     if vote.nil?
       head :error
     else
       vote.destroy
-      render json: event
+      render json: vote
     end
   end
 
