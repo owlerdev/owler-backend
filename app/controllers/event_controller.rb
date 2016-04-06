@@ -18,8 +18,6 @@ class EventController < ApplicationController
       return
     end
 
-    binding.pry
-
     render json: event
   end
 
