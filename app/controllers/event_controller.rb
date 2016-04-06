@@ -2,6 +2,7 @@ class EventController < ApplicationController
   include Geokit
 
   def index
+    # TODO: get latlong of user, return only nearby events
     render json: Event.all
   end
 
