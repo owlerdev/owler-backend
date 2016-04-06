@@ -10,10 +10,12 @@ class Vote < ActiveRecord::Base
   validates :user, :event, presence: true
   
   def get_type
-    if Time.now < self.event.start_t:
-      time = 0
+    # Differentiate between hype and current upvotes
+    # TODO: no upvotes after end time?
+    if DateTime.now < self.event.start_t
+      self.type = 0
     else
-      time = 1
+      self.type = 1
     end    
   end
 end

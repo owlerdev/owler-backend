@@ -1,7 +1,8 @@
 class VoteController < ApplicationController
   def create
-    vote = Event.new filtered_params
+    vote = Vote.new
     vote.user = current_user
+    vote.event = Event.find_by(id: filtered_params[:id])
 
     if vote.valid?
       vote.save!
@@ -15,7 +16,7 @@ class VoteController < ApplicationController
 
   def destroy
     # can only delete user's votes
-    event = Event.find_by(id: params[:id], user_id: current_user.id)
+    event = Vote.find_by(id: params[:id], user_id: current_user.id)
 
     if vote.nil?
       head :error
