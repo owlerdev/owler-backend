@@ -23,14 +23,15 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'devise'
 gem 'simple_form'
 
 gem 'factory_girl_rails'
 
 gem 'protected_attributes'
 
-gem 'simple_token_authentication', '~> 1.0'
+# Devise token auth
+gem 'devise_token_auth'
+gem 'omniauth'
 
 # Consume RESTful services
 gem 'httparty'

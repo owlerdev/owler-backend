@@ -26,6 +26,9 @@ RSpec.describe EventController, type: :controller do
       expect(response_event['name']).to eq(@event.name)
       expect(response_event['lat']).to be_instance_of(Float)
       expect(response_event['lng']).to be_instance_of(Float)
+
+      # expect default time to be set
+      expect(response_event['end_t']).to be
     end
 
     it "fails to create a new event with bad address" do

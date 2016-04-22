@@ -50,7 +50,6 @@ RSpec.describe VoteController, type: :controller do
 
       # sign in another user, try to delete other user's upvote
       sign_in @event.user
-      binding.pry
       delete :destroy, id: vote["id"]
       expect(response).to have_http_status(:error)
     end

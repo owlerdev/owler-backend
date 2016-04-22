@@ -1,12 +1,11 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
   get 'user/index'
 
-  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'user#index'
   resources :event, only: [:index, :create, :show, :update, :destroy]
   resources :vote, only: [:create, :destroy]
 

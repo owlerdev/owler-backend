@@ -7,7 +7,6 @@ FactoryGirl.define do
     description "Awesome party. Please come."
     name "The Best Party of the Semester"
     start_t "2016-01-31 13:25:23"
-    end_t "2016-01-31 15:25:23"
     posted false
 
     factory :another_event do
