@@ -23,3 +23,6 @@ db/schema.rb
 
 /.idea
 *.iml
+
+# vim swp files
+*.swp
