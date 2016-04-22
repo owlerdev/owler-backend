@@ -1,5 +1,6 @@
 class EventController < ApplicationController
   include Geokit
+  before_action :authenticate_user!
 
   def index
     # TODO: get latlong of user, return only nearby events
