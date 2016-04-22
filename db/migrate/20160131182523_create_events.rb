@@ -3,6 +3,11 @@ class CreateEvents < ActiveRecord::Migration
     create_table :events do |t|
       t.string :name, null: false
       t.string :address
+
+      # latitude and longitude
+      t.float :lat
+      t.float :lng
+
       t.text :description
 
       t.integer :user_id
@@ -12,7 +17,6 @@ class CreateEvents < ActiveRecord::Migration
       t.datetime :end_t
 
       t.boolean :posted, default: false
-      t.string :update_code
 
       t.timestamps null: false
     end

@@ -1,13 +1,24 @@
 class EventController < ApplicationController
+  include Geokit
+
   def index
+    # TODO: get latlong of user, return only nearby events
     render json: Event.all
   end
 
   def create
     event = Event.new filtered_params
-    event.save!
-    current_user.events += [event]
-    current_user.save!
+    event.user = current_user
+
+    if event.valid?
+      event.save!
+      current_user.events += [event]
+      current_user.save!
+    else
+      head :error
+      return
+    end
+
     render json: event
   end
 
@@ -40,6 +51,8 @@ class EventController < ApplicationController
 
   private
     def filtered_params
-      params.require(:event).permit(:id, :name, :address, :description)
+      params.require(:event).permit(:id, :name, :address, :description, :start_t, :end_t)
     end
 end
+
+

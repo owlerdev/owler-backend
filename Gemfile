@@ -32,6 +32,11 @@ gem 'protected_attributes'
 
 gem 'simple_token_authentication', '~> 1.0'
 
+# Consume RESTful services
+gem 'httparty'
+gem 'geokit'
+gem 'geokit-rails'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

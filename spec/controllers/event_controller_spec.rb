@@ -2,10 +2,8 @@ require 'rails_helper'
 
 RSpec.describe EventController, type: :controller do
   before(:each) do
-    @user = create(:user)
-    sign_in @user
-
     @event = create(:event)
+    sign_in @event.user
   end
 
   describe "GET event#index" do
@@ -15,20 +13,41 @@ RSpec.describe EventController, type: :controller do
     end
   end
 
-  describe "POST event#new" do
-    it "creates a new object" do
+  describe "POST event#create" do
+    before(:each) do
       Event.destroy_all
+    end
+
+    it "creates a new object" do
       post :create, event: @event.attributes
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)['name']).to eq(@event.name)
+
+      response_event = JSON.parse(response.body)
+      expect(response_event['name']).to eq(@event.name)
+      expect(response_event['lat']).to be_instance_of(Float)
+      expect(response_event['lng']).to be_instance_of(Float)
+    end
+
+    it "fails to create a new event with bad address" do
+      @event.address = "QQQQQQQQQQQQQQ"
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
+    end
+
+    it "fails to create a new event with no address" do
+      @event.address = ""
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
+    end
+
+    it "fails to create a new event with no name" do
+      @event.name = ""
+      post :create, event: @event.attributes
+      expect(response).to have_http_status(:error)
     end
   end
 
   describe "GET event#show" do
-    before do
-      @event = create(:event)
-    end
-
     it "returns an event" do
       get :show, id: @event.id
       expect(response).to have_http_status(:success)
@@ -38,24 +57,22 @@ RSpec.describe EventController, type: :controller do
 
   describe "update event" do
     it "modifies an event with PATCH" do
-      patch :update, id: @event.id, event: {address: "new address"}
-      expect(JSON.parse(response.body)['address']).to eq("new address")
+      patch :update, id: @event.id, event: {address: "700 Ukrop Way"}
+      expect(JSON.parse(response.body)['address']).to eq("700 Ukrop Way")
     end
 
     it "modifies an event with PUT" do
-      @event.address = "new address"
+      @event.address = "700 Ukrop Way"
       put :update, id: @event.id, event: @event.attributes
-      expect(JSON.parse(response.body)['address']).to eq("new address")
+      expect(JSON.parse(response.body)['address']).to eq("700 Ukrop Way")
     end
   end
 
   describe "DELETE event" do
     before(:each) do
-      @another_user = create(:another_user)
       @another_event = create(:another_event)
-
-      @user.events += [@event]
-      @another_user.events += [@another_event]
+      @event.user.events += [@event]
+      @another_event.user.events += [@another_event]
     end
 
     it "destroys event owned by user" do
