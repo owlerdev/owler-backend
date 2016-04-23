@@ -1,9 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe EventController, type: :controller do
+  
+
   before(:each) do
     @event = create(:event)
-    sign_in @event.user
+
+    # log in using token auth
+    auth_headers = @event.user.create_new_auth_token
+    request.headers.merge!(auth_headers)
   end
 
   describe "GET event#index" do

@@ -7,7 +7,10 @@ RSpec.describe VoteController, type: :controller do
 
     # create an event in the future
     @future_event = create(:future_event)
-    sign_in @event.user
+
+    # log in
+    auth_headers = @event.user.create_new_auth_token
+    request.headers.merge!(auth_headers)
   end
 
   describe "POST vote#create" do
@@ -41,16 +44,13 @@ RSpec.describe VoteController, type: :controller do
 
     it "can't delete another user's upvote" do
       # future_event is by another user
-      sign_out @event.user
-      sign_in @future_event.user
-      post :create, event: @future_event.attributes
-      expect(response).to have_http_status(:success)
-      vote = JSON.parse(response.body)
-      sign_out @future_event.user
+      vote = Vote.new(user: @future_event.user, event: @future_event)
+      vote.save!
 
       # sign in another user, try to delete other user's upvote
-      sign_in @event.user
-      delete :destroy, id: vote["id"]
+      auth_headers = @event.user.create_new_auth_token
+      request.headers.merge!(auth_headers)
+      delete :destroy, id: vote.id
       expect(response).to have_http_status(:error)
     end
   end
