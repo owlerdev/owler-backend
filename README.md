@@ -9,37 +9,46 @@ Install ruby
 `rvm install ruby-2.1.5`
 Run `bundle install`  
 
-### Database creation
-Install Postgresql on your operating system
-For Macs, use you can use homebrew if you have it:
-`brew install postgresql`
-Now run postgres. My personal favorite way of doing this is on Mac is with the `lunchy` gem.
-`gem install lunchy`
-and then
-`lunchy start postgres` or `lunchy stop postgres`
+### Endpoints
 
-After Postgres is installed and running:
-Create user as a superuser:
-`createuser -s -r owler`
-Create the databases for development and testing:
-`rake db:create:all`
-This creates three databases, one for development, testing, and production. Details in `database.yml`
-Then migrate your databases. You'll be doing this often, so it might be a good idea to make an alias for these two commands so that you always run them at the same time.
-`rake db:migrate` and `rake db:migrate RAILS_ENV=test`
+## Auth
+`/auth` for [Devise Token Auth](https://github.com/lynndylanhurley/devise_token_auth). All other endpoints require users to be logged in with the appropriate headers.
 
-### Heroku setup
-Install the heroku commandline toolbelt
+## Events
+`GET /event` Returns all events in the database. In the future, this will require location coordinates to return only the events near the logged in user.
 
-* Database initialization
+`POST /event` Creates a new event. Expects a body of the following form:
 
-* How to run the test suite
+```json
+{
+  "event": {
+    "name": "...",
+    "address": "...",
+    "description": "...",
+    "start_t": time,
+    "end_t": time,
+  },
+}
+```
+All parameters are required with the exception of the end time. This will default to three hours after the start time.
 
-* Services (job queues, cache servers, search engines, etc.)
+`GET /event/:id` Returns the event specified by the `:id` parameter.
 
-* Deployment instructions
+`POST/PATCH event/:id` Updates the event specified by the `id` parameter. `PATCH` can update individual attributes.
 
-* ...
+`DELETE event/:id` Deletes the specified event. Users can only delete their own events.
 
+## Votes
+`POST /vote` Creates a new upvote. This will be Hype if the event has not yet occured and an Upvote if it has already started. This requires a body of the following form:
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+ ```json
+{
+  "vote": {
+    "id": id,
+  },
+}
+```
+
+This `id` parameter refers to the event ID that will be upvoted by the current user.
+
+`DELETE /vote/:id` deletes the vote with the specified vote ID. This may be changed to require the ID of the event specified.
