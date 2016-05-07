@@ -9,5 +9,8 @@ class User < ActiveRecord::Base
 
   has_many :events
 
+  # Only W&M email addresses for now
+  validates :email, format: { with: /.*@email\.wm\.edu/, message: "Only allows W&M email addresses." }
+
   attr_accessible :email, :password, :password_confirmation
 end
